@@ -1,0 +1,35 @@
+name:  Build and Push Multi Docker Image for Both client and Server
+on:
+  push:
+    branches: ["main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout code 
+        uses: actions/checkout@v3
+       
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+         username: ${{secrets.DOCKER_USER_NAME}}
+         password: ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build nodejs server Image
+        run: docker build -t ${{secrets.DOCKER_USER_NAME}}/mern-server:latest ./server
+
+      - name: Push  nodejs server Image
+        run: docker push ${{secrets.DOCKER_USER_NAME}}/mern-server:latest
+
+      - name: Trigger Deploy on Render
+        run: curl -X POST ${{secrets.RENDER_WEBHOOK}}
+
+      
+
+      
+
+      
+
+  
+    
