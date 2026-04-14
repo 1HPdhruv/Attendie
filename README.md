@@ -1,9 +1,104 @@
 # 🎓 MERN Student Attendance Management System
 
 [![Deployed on Render](https://img.shields.io/badge/Backend-Render-46a2f1?logo=render)](https://student-attandance-management-system.netlify.app/)
-[![Deployed on Netlify](https://img.shields.io/badge/Frontend-Netlify-00c7b7?logo=netlify)](https://student-attandance-management-system.netlify.app/)
+[![Deploy Frontend on Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://vercel.com/)
 [![Docker](https://img.shields.io/badge/Docker-Hub-2496ed?logo=docker)](https://hub.docker.com/repository/docker/pradeep2005/mern-server/general)
 
+
+## 🧱 Clean Architecture (Client + Server)
+
+This repository is organized for easy deployment:
+
+- `client/` → React + Vite frontend
+- `server/` → Node.js + Express API
+
+Backend API is modular and beginner-friendly:
+
+- `server/controllers/` for business logic
+- `server/routes/` for endpoint mapping
+- `server/middelware/` for auth and error handling
+- `server/model/` for Mongoose models
+
+---
+
+## ⚙️ Environment Variables
+
+### Backend (`server/.env`)
+
+Copy from `server/.env.example`:
+
+```env
+PORT=5000
+DB_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLIENT_URL=http://localhost:5173
+```
+
+### Frontend (`client/.env`)
+
+Copy from `client/.env.example`:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Only frontend API base URL is required on client side.
+
+---
+
+## 🧪 Run Locally
+
+### 1. Start backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+Backend runs on `PORT` from env.
+
+### 2. Start frontend
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Vite proxy is enabled for `/api` during local development.
+
+### 3. Production build check
+
+```bash
+cd client
+npm run build
+```
+
+---
+
+## 🚀 Deployment Guide
+
+### Backend on Render
+
+1. Create a new **Web Service** from this GitHub repo.
+2. Root directory: `server`
+3. Build command: `npm install`
+4. Start command: `npm start`
+5. Add env vars from `server/.env.example`.
+6. Deploy and copy the Render backend URL.
+
+### Frontend on Vercel
+
+1. Import this repo into Vercel.
+2. Keep root deploy config from `vercel.json`.
+3. Add env var:
+  - `VITE_API_URL=https://your-render-backend-url`
+4. Redeploy frontend.
+
+After setting `VITE_API_URL`, frontend API calls will use deployed backend.
+
+---
 
 
 ## 📌 Overview

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/api";
 
 const Login = () => {
   const [user, setUser] = useState("Student");
@@ -8,11 +9,9 @@ const Login = () => {
   const [showpassword, setShowpassword] = useState(true);
   const navigate = useNavigate();
 
-  const API = import.meta.env.VITE_API_URL;
-
   // ✅ Check backend is alive (only once)
   useEffect(() => {
-    fetch(API)
+    fetch(apiUrl("/api/health"))
       .then((res) => {
         if (res.ok) setLoad(true);
       })
@@ -38,7 +37,7 @@ const Login = () => {
     const id = data.get("userid");
     const password = data.get("password");
 
-    fetch(`${API}/api/auth/login`, {
+    fetch(apiUrl("/api/auth/login"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +52,7 @@ const Login = () => {
       })
       .then((permission) => {
         localStorage.setItem("token", permission.token);
-        navigate(`/${user}`, { state: { id } });
+        navigate(`/${user}`, { state: { studentId: id } });
       })
       .catch((err) => {
         alert(`Error from server: ${err.message}`);

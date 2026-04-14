@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/api";
 
 // ─── Prediction Engine (client-side mirror of server logic) ───────────────────
 function analyzeAttendance(attendance, totalExpectedClasses = 90) {
@@ -236,7 +237,7 @@ export default function Student() {
       return;
     }
 
-    fetch(`/api/students/${studentId}`, {
+    fetch(apiUrl(`/api/students/${studentId}`), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => {
