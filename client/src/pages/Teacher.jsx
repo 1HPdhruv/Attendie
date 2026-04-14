@@ -96,7 +96,6 @@ function AtRiskPanel({ students }) {
 
   return (
     <div className="mb-6 bg-red-50 border-2 border-red-300 rounded-2xl overflow-hidden shadow-sm">
-      {/* Header */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-5 py-4 bg-red-500 text-white hover:bg-red-600 transition-colors"
@@ -287,7 +286,8 @@ export default function Teacher() {
   const [selected, setSelected] = useState(new Set());
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
-  const [activeTab, setActiveTab] = useState("attendance"); // "attendance" | "predictions"
+  const [activeTab, setActiveTab] = useState("attendance");
+  const [customDate, setCustomDate] = useState(""); // ← NEW
 
   // Collect all unique dates across all students
   const allDates = [
@@ -295,6 +295,33 @@ export default function Teacher() {
       students.flatMap((s) => Object.keys(s.attendance || {}))
     ),
   ].sort();
+
+  // ← NEW: Add today's date as a column for all students
+  const handleAddToday = () => {
+    const today = new Date().toISOString().split("T")[0];
+    if (allDates.includes(today)) return;
+    setStudents((prev) =>
+      prev.map((s) => ({
+        ...s,
+        attendance: { ...s.attendance, [today]: "" },
+      }))
+    );
+  };
+
+  // ← NEW: Add a custom date as a column for all students
+  const handleAddCustomDate = () => {
+    if (!customDate || allDates.includes(customDate)) {
+      setCustomDate("");
+      return;
+    }
+    setStudents((prev) =>
+      prev.map((s) => ({
+        ...s,
+        attendance: { ...s.attendance, [customDate]: "" },
+      }))
+    );
+    setCustomDate("");
+  };
 
   useEffect(() => {
     if (!token) {
@@ -441,6 +468,27 @@ export default function Teacher() {
           >
             + Add Student
           </button>
+          {/* ── NEW: Add Today button ── */}
+          <button
+            onClick={handleAddToday}
+            className="text-sm px-3 py-1.5 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+          >
+            📅 Today
+          </button>
+          {/* ── NEW: Custom date picker ── */}
+          <input
+            type="date"
+            value={customDate}
+            onChange={(e) => setCustomDate(e.target.value)}
+            className="text-sm px-2 py-1.5 border rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-300"
+          />
+          <button
+            onClick={handleAddCustomDate}
+            disabled={!customDate}
+            className="text-sm px-3 py-1.5 bg-purple-400 text-white rounded-lg hover:bg-purple-500 transition-colors disabled:opacity-40"
+          >
+            + Date
+          </button>
           {selected.size > 0 && (
             <button
               onClick={handleDeleteSelected}
@@ -531,6 +579,12 @@ export default function Teacher() {
                           {date}
                         </th>
                       ))}
+                      {/* ── NEW: hint column when no dates yet ── */}
+                      {allDates.length === 0 && (
+                        <th className="px-4 py-3 text-center text-gray-400 font-normal italic">
+                          Click "📅 Today" or pick a date to add attendance
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -603,10 +657,7 @@ export default function Teacher() {
         {/* ── Tab: Predictions ─────────────────────────────────────────────── */}
         {activeTab === "predictions" && (
           <div>
-            {/* At-risk panel */}
             <AtRiskPanel students={students} />
-
-            {/* Full predictions table */}
             <div className={`${card} border rounded-2xl shadow-sm overflow-hidden`}>
               <div className="px-5 py-4 border-b">
                 <h2 className="font-bold text-base">📈 All Student Predictions</h2>
@@ -636,7 +687,7 @@ export default function Teacher() {
                         pred: analyzeAttendance(s.attendance),
                       }))
                       .sort((a, b) => a.pred.projectedFinal - b.pred.projectedFinal)
-                      .map((s, i) => (
+                      .map((s) => (
                         <tr
                           key={s.studentId}
                           className={`border-t ${tableTr} transition-colors`}
