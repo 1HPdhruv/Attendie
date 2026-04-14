@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/api";
 
 // ─── Prediction Engine (same logic as server/routes/predict.js) ───────────────
 function analyzeAttendance(attendance, totalExpectedClasses = 90) {
@@ -180,7 +181,7 @@ function AddStudentModal({ onClose, onAdd, token }) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/students", {
+      const res = await fetch(apiUrl("/api/students"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -300,7 +301,7 @@ export default function Teacher() {
       navigate("/");
       return;
     }
-    fetch("/api/students", {
+    fetch(apiUrl("/api/students"), {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => {
@@ -338,7 +339,7 @@ export default function Teacher() {
     try {
       await Promise.all(
         students.map((s) =>
-          fetch(`/api/students/${s.studentId}/attendance`, {
+          fetch(apiUrl(`/api/students/${s.studentId}/attendance`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -371,7 +372,7 @@ export default function Teacher() {
     try {
       await Promise.all(
         [...selected].map((id) =>
-          fetch(`/api/students/${id}`, {
+          fetch(apiUrl(`/api/students/${id}`), {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
           })
