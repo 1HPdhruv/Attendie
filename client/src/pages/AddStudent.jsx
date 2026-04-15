@@ -2,6 +2,7 @@ import React from "react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { apiUrl } from "../config/api";
 
 const AddStudent = () => {
   const formRef = useRef(null);
@@ -10,9 +11,8 @@ const AddStudent = () => {
     e.preventDefault();
     const data = new FormData(e.target);
     const student_data = Object.fromEntries(data.entries());
-    student_data.attandance = {};
     const token = localStorage.getItem("token");
-    fetch(`${import.meta.env.VITE_API_URL}/AddStudent`, {
+    fetch(apiUrl("/api/students"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -22,10 +22,8 @@ const AddStudent = () => {
     })
       .then((response) => response.json())
       .then((res) => {
-        console.log(res);
-
         formRef.current.reset();
-        res
+        res?.studentId
           ? Swal.fire({
               title: "Student added the successfully !",
               text: "Click Ok  to navigate to -> dashboard ",

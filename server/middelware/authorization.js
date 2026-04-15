@@ -1,10 +1,8 @@
 const authorization = (req, res, next) => {
-  console.log(req.user.user);
-
-  if (req.user.user == "teacher") {
+  if (req.user?.role === "teacher" || req.user?.user === "teacher") {
     next();
   } else {
-    return res.status(401).json({ message: "unauthorized access " });
+    return res.status(403).json({ message: "Unauthorized access" });
   }
 };
 
