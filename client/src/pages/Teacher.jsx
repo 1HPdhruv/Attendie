@@ -280,7 +280,8 @@ function AddMarksModal({ student, onClose, onSave, token }) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/marks/${student.id}`, {
+      const sid = student.id || student.studentId;
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/marks/${sid}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -296,7 +297,7 @@ function AddMarksModal({ student, onClose, onSave, token }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add marks");
       setSuccess(true);
-      if (onSave) onSave(student.id, data.marks);
+      if (onSave) onSave(sid, data.marks);
       setTimeout(() => {
         setSuccess(false);
         setForm({ subject: "", examType: "internal", marksObtained: "", maxMarks: 100, semester: 1 });
@@ -371,7 +372,8 @@ function CGPAModal({ student, onClose, onSave, token }) {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/marks/${student.id}/cgpa`, {
+      const sid = student.id || student.studentId;
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/marks/${sid}/cgpa`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -381,7 +383,7 @@ function CGPAModal({ student, onClose, onSave, token }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
-      onSave(student.id, +cgpa);
+      onSave(sid, +cgpa);
       onClose();
     } catch (err) {
       setError(err.message);
