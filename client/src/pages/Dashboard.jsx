@@ -32,15 +32,15 @@ ChartJS.register(
 function RiskBadge({ risk }) {
   const map = {
     high: {
-      label: "🔴 High Risk",
+      label: "HIGH RISK",
       cls: "bg-red-100 text-red-700 border-red-300",
     },
     medium: {
-      label: "🟡 Medium Risk",
+      label: "MEDIUM RISK",
       cls: "bg-yellow-100 text-yellow-700 border-yellow-300",
     },
     low: {
-      label: "🟢 Low Risk",
+      label: "LOW RISK",
       cls: "bg-green-100 text-green-700 border-green-300",
     },
   };
@@ -55,10 +55,9 @@ function RiskBadge({ risk }) {
 }
 
 // ─── Summary Card ────────────────────────────────────────────────────────────
-function SummaryCard({ icon, label, value, color = "text-blue-600", bg = "bg-blue-50" }) {
+function SummaryCard({ label, value, color = "text-blue-600", bg = "bg-blue-50" }) {
   return (
     <div className={`${bg} rounded-2xl p-5 flex items-center gap-4 shadow-sm border border-white/10`}>
-      <div className="text-3xl">{icon}</div>
       <div>
         <p className={`text-2xl font-extrabold ${color}`}>{value}</p>
         <p className="text-xs text-gray-500 mt-0.5">{label}</p>
@@ -71,7 +70,6 @@ function SummaryCard({ icon, label, value, color = "text-blue-600", bg = "bg-blu
 function AlertCard({ alert }) {
   return (
     <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-      <span className="text-2xl mt-0.5">⚠️</span>
       <div className="flex-1">
         <p className="font-bold text-red-800 text-sm">
           {alert.name}{" "}
@@ -79,9 +77,9 @@ function AlertCard({ alert }) {
         </p>
         <p className="text-red-600 text-xs mt-1">{alert.message}</p>
         <div className="flex gap-3 mt-2 text-xs text-red-500">
-          <span>📊 Attendance: {alert.attendancePct}%</span>
-          <span>📈 CGPA: {alert.cgpa}</span>
-          <span>📝 Avg Marks: {alert.avgMarks}%</span>
+          <span>Attendance: {alert.attendancePct}%</span>
+          <span>CGPA: {alert.cgpa}</span>
+          <span>Avg Marks: {alert.avgMarks}%</span>
         </div>
       </div>
     </div>
@@ -106,7 +104,6 @@ export default function Dashboard() {
       return;
     }
 
-    // Fetch dashboard + predictions in parallel
     Promise.all([
       fetch(`${import.meta.env.VITE_API_URL}/api/risk/dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -137,7 +134,6 @@ export default function Dashboard() {
     navigate("/");
   };
 
-  // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
@@ -153,7 +149,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950">
         <div className="text-center p-6 bg-gray-800 rounded-2xl shadow border border-red-500 max-w-sm">
-          <p className="text-red-400 font-semibold">⚠ {error}</p>
+          <p className="text-red-400 font-semibold">{error}</p>
           <button
             onClick={() => navigate("/")}
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg text-sm"
@@ -169,11 +165,9 @@ export default function Dashboard() {
   const alerts = dashData?.alerts || [];
   const attendanceBuckets = dashData?.attendanceBuckets || {};
 
-  // ── Chart Data ─────────────────────────────────────────────────────────────
-
   // Risk Distribution Pie Chart
   const pieData = {
-    labels: ["🟢 Low Risk", "🟡 Medium Risk", "🔴 High Risk"],
+    labels: ["Low Risk", "Medium Risk", "High Risk"],
     datasets: [
       {
         data: [summary.lowRisk || 0, summary.mediumRisk || 0, summary.highRisk || 0],
@@ -223,10 +217,7 @@ export default function Dashboard() {
       },
     },
     scales: {
-      x: {
-        ticks: { color: "#9ca3af" },
-        grid: { display: false },
-      },
+      x: { ticks: { color: "#9ca3af" }, grid: { display: false } },
       y: {
         ticks: { color: "#9ca3af", stepSize: 1 },
         grid: { color: "rgba(255,255,255,0.05)" },
@@ -234,7 +225,7 @@ export default function Dashboard() {
     },
   };
 
-  // Semester-wise Performance Line Chart (aggregate from all predictions)
+  // Semester-wise Performance Line Chart
   const allSemesters = {};
   predictions.forEach((p) => {
     (p.semesterPerformance || []).forEach((sp) => {
@@ -289,7 +280,7 @@ export default function Dashboard() {
     },
   };
 
-  // ── Filter predictions ─────────────────────────────────────────────────────
+  // Filter predictions
   const filteredPredictions = predictions.filter((p) => {
     const matchRisk = filterRisk === "all" || p.risk === filterRisk;
     const matchSearch =
@@ -299,13 +290,11 @@ export default function Dashboard() {
     return matchRisk && matchSearch;
   });
 
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      {/* ── Navbar ─────────────────────────────────────────────────────────── */}
+      {/* Navbar */}
       <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between shadow-lg sticky top-0 z-20">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🧠</span>
           <div>
             <span className="font-bold text-lg">Risk Prediction Dashboard</span>
             <span className="text-xs text-gray-500 ml-2">
@@ -318,7 +307,7 @@ export default function Dashboard() {
             onClick={() => navigate("/Teacher")}
             className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            📋 Teacher Panel
+            Teacher Panel
           </button>
           <button
             onClick={handleLogout}
@@ -330,104 +319,49 @@ export default function Dashboard() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* ── Summary Cards ───────────────────────────────────────────────── */}
+        {/* Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-          <SummaryCard
-            icon="👥"
-            label="Total Students"
-            value={summary.totalStudents || 0}
-            color="text-blue-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="🟢"
-            label="Low Risk"
-            value={summary.lowRisk || 0}
-            color="text-green-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="🟡"
-            label="Medium Risk"
-            value={summary.mediumRisk || 0}
-            color="text-yellow-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="🔴"
-            label="High Risk"
-            value={summary.highRisk || 0}
-            color="text-red-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="📊"
-            label="Avg Attendance"
-            value={`${summary.averageAttendance || 0}%`}
-            color="text-cyan-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="📈"
-            label="Avg CGPA"
-            value={summary.averageCGPA || 0}
-            color="text-purple-400"
-            bg="bg-gray-800"
-          />
-          <SummaryCard
-            icon="📝"
-            label="Avg Marks"
-            value={`${summary.averageMarks || 0}%`}
-            color="text-indigo-400"
-            bg="bg-gray-800"
-          />
+          <SummaryCard label="Total Students" value={summary.totalStudents || 0} color="text-blue-400" bg="bg-gray-800" />
+          <SummaryCard label="Low Risk" value={summary.lowRisk || 0} color="text-green-400" bg="bg-gray-800" />
+          <SummaryCard label="Medium Risk" value={summary.mediumRisk || 0} color="text-yellow-400" bg="bg-gray-800" />
+          <SummaryCard label="High Risk" value={summary.highRisk || 0} color="text-red-400" bg="bg-gray-800" />
+          <SummaryCard label="Avg Attendance" value={`${summary.averageAttendance || 0}%`} color="text-cyan-400" bg="bg-gray-800" />
+          <SummaryCard label="Avg CGPA" value={summary.averageCGPA || 0} color="text-purple-400" bg="bg-gray-800" />
+          <SummaryCard label="Avg Marks" value={`${summary.averageMarks || 0}%`} color="text-indigo-400" bg="bg-gray-800" />
         </div>
 
-        {/* ── Charts Row ──────────────────────────────────────────────────── */}
+        {/* Charts Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pie Chart */}
           <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 shadow-lg">
-            <h3 className="font-bold text-sm text-gray-300 mb-4">
-              🎯 Risk Distribution
-            </h3>
+            <h3 className="font-bold text-sm text-gray-300 mb-4">Risk Distribution</h3>
             <div className="h-64">
               <Pie data={pieData} options={pieOptions} />
             </div>
           </div>
-
-          {/* Bar Chart */}
           <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 shadow-lg">
-            <h3 className="font-bold text-sm text-gray-300 mb-4">
-              📊 Attendance Ranges
-            </h3>
+            <h3 className="font-bold text-sm text-gray-300 mb-4">Attendance Ranges</h3>
             <div className="h-64">
               <Bar data={barData} options={barOptions} />
             </div>
           </div>
-
-          {/* Line Chart */}
           <div className="bg-gray-900 rounded-2xl border border-gray-800 p-5 shadow-lg">
-            <h3 className="font-bold text-sm text-gray-300 mb-4">
-              📈 Marks Trend
-            </h3>
+            <h3 className="font-bold text-sm text-gray-300 mb-4">Marks Trend</h3>
             <div className="h-64">
               <Line data={lineData} options={lineOptions} />
             </div>
           </div>
         </div>
 
-        {/* ── Risk Alerts ─────────────────────────────────────────────────── */}
+        {/* Risk Alerts */}
         {alerts.length > 0 && (
           <div className="bg-gray-900 rounded-2xl border-2 border-red-500/50 p-6 shadow-lg">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-xl">🚨</span>
               <h2 className="font-bold text-lg text-red-400">
-                Risk Alerts — {alerts.length} High Risk Student
-                {alerts.length !== 1 ? "s" : ""}
+                Risk Alerts -- {alerts.length} High Risk Student{alerts.length !== 1 ? "s" : ""}
               </h2>
             </div>
             <p className="text-xs text-red-300 mb-4">
-              ⚠ Warning: These students require immediate faculty intervention
+              Warning: These students require immediate faculty intervention
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {alerts.map((alert) => (
@@ -437,13 +371,11 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── Student Risk Table ──────────────────────────────────────────── */}
+        {/* Student Risk Table */}
         <div className="bg-gray-900 rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <h2 className="font-bold text-base">
-                📋 All Student Risk Analysis
-              </h2>
+              <h2 className="font-bold text-base">All Student Risk Analysis</h2>
               <p className="text-xs text-gray-500 mt-0.5">
                 Decision Tree ML predictions based on attendance, CGPA & marks
               </p>
@@ -462,16 +394,15 @@ export default function Dashboard() {
                 className="text-sm px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="all">All Risks</option>
-                <option value="high">🔴 High</option>
-                <option value="medium">🟡 Medium</option>
-                <option value="low">🟢 Low</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
               </select>
             </div>
           </div>
 
           {filteredPredictions.length === 0 ? (
             <div className="p-12 text-center text-gray-500">
-              <p className="text-3xl mb-2">📭</p>
               <p>No students match the current filter.</p>
             </div>
           ) : (
@@ -481,24 +412,16 @@ export default function Dashboard() {
                   <tr className="bg-gray-800 text-gray-400 text-left">
                     <th className="px-4 py-3 font-semibold">Student</th>
                     <th className="px-4 py-3 font-semibold">Department</th>
-                    <th className="px-4 py-3 font-semibold text-center">
-                      Attendance %
-                    </th>
+                    <th className="px-4 py-3 font-semibold text-center">Attendance %</th>
                     <th className="px-4 py-3 font-semibold text-center">CGPA</th>
-                    <th className="px-4 py-3 font-semibold text-center">
-                      Avg Marks
-                    </th>
-                    <th className="px-4 py-3 font-semibold text-center">
-                      Risk Level
-                    </th>
-                    <th className="px-4 py-3 font-semibold text-center">
-                      Confidence
-                    </th>
+                    <th className="px-4 py-3 font-semibold text-center">Avg Marks</th>
+                    <th className="px-4 py-3 font-semibold text-center">Risk Level</th>
+                    <th className="px-4 py-3 font-semibold text-center">Confidence</th>
                     <th className="px-4 py-3 font-semibold">Reason</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPredictions.map((p, i) => (
+                  {filteredPredictions.map((p) => (
                     <tr
                       key={p.studentId}
                       className={`border-t border-gray-800 hover:bg-gray-800/60 transition-colors ${
@@ -509,43 +432,19 @@ export default function Dashboard() {
                         <p className="font-medium text-white">{p.name}</p>
                         <p className="text-xs text-gray-500">{p.studentId}</p>
                       </td>
-                      <td className="px-4 py-3 text-gray-400">
-                        {p.department || "—"}
-                      </td>
+                      <td className="px-4 py-3 text-gray-400">{p.department || "--"}</td>
                       <td className="px-4 py-3 text-center">
-                        <span
-                          className={`font-bold ${
-                            p.attendancePct >= 75
-                              ? "text-green-400"
-                              : "text-red-400"
-                          }`}
-                        >
+                        <span className={`font-bold ${p.attendancePct >= 75 ? "text-green-400" : "text-red-400"}`}>
                           {p.attendancePct}%
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <span
-                          className={`font-bold ${
-                            p.cgpa >= 7
-                              ? "text-green-400"
-                              : p.cgpa >= 5
-                              ? "text-yellow-400"
-                              : "text-red-400"
-                          }`}
-                        >
+                        <span className={`font-bold ${p.cgpa >= 7 ? "text-green-400" : p.cgpa >= 5 ? "text-yellow-400" : "text-red-400"}`}>
                           {p.cgpa}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <span
-                          className={`font-bold ${
-                            p.avgMarks >= 60
-                              ? "text-green-400"
-                              : p.avgMarks >= 40
-                              ? "text-yellow-400"
-                              : "text-red-400"
-                          }`}
-                        >
+                        <span className={`font-bold ${p.avgMarks >= 60 ? "text-green-400" : p.avgMarks >= 40 ? "text-yellow-400" : "text-red-400"}`}>
                           {p.avgMarks}%
                         </span>
                       </td>
@@ -557,9 +456,7 @@ export default function Dashboard() {
                           {((p.confidence || 0) * 100).toFixed(0)}%
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-400 text-xs max-w-xs">
-                        {p.reason}
-                      </td>
+                      <td className="px-4 py-3 text-gray-400 text-xs max-w-xs">{p.reason}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -568,58 +465,28 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* ── Decision Tree Explanation ────────────────────────────────────── */}
+        {/* Decision Tree Explanation */}
         <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 shadow-lg">
-          <h2 className="font-bold text-base mb-4 flex items-center gap-2">
-            <span>🌳</span> ML Model: Decision Tree Classifier
-          </h2>
+          <h2 className="font-bold text-base mb-4">ML Model: Decision Tree Classifier</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-sm font-semibold text-gray-400 mb-2">
-                Input Features
-              </h3>
+              <h3 className="text-sm font-semibold text-gray-400 mb-2">Input Features</h3>
               <ul className="space-y-1 text-sm text-gray-300">
-                <li>📊 Attendance Percentage</li>
-                <li>📈 CGPA (0-10 scale)</li>
-                <li>📝 Average Marks Percentage</li>
+                <li>- Attendance Percentage</li>
+                <li>- CGPA (0-10 scale)</li>
+                <li>- Average Marks Percentage</li>
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-400 mb-2">
-                Decision Rules
-              </h3>
+              <h3 className="text-sm font-semibold text-gray-400 mb-2">Decision Rules</h3>
               <div className="text-xs text-gray-400 font-mono bg-gray-800 rounded-lg p-3 space-y-1">
-                <p>
-                  <span className="text-yellow-400">IF</span> attendance &lt; 50%{" "}
-                  <span className="text-red-400">→ HIGH RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE IF</span> attendance &lt;
-                  75% AND cgpa &lt; 5{" "}
-                  <span className="text-red-400">→ HIGH RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE IF</span> attendance &lt;
-                  75% AND marks &lt; 40%{" "}
-                  <span className="text-red-400">→ HIGH RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE IF</span> attendance &lt;
-                  75%{" "}
-                  <span className="text-yellow-400">→ MEDIUM RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE IF</span> cgpa &lt; 5{" "}
-                  <span className="text-yellow-400">→ MEDIUM RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE IF</span> marks &lt; 60%{" "}
-                  <span className="text-yellow-400">→ MEDIUM RISK</span>
-                </p>
-                <p>
-                  <span className="text-yellow-400">ELSE</span>{" "}
-                  <span className="text-green-400">→ LOW RISK</span>
-                </p>
+                <p><span className="text-yellow-400">IF</span> attendance &lt; 50% <span className="text-red-400">-&gt; HIGH RISK</span></p>
+                <p><span className="text-yellow-400">ELSE IF</span> attendance &lt; 75% AND cgpa &lt; 5 <span className="text-red-400">-&gt; HIGH RISK</span></p>
+                <p><span className="text-yellow-400">ELSE IF</span> attendance &lt; 75% AND marks &lt; 40% <span className="text-red-400">-&gt; HIGH RISK</span></p>
+                <p><span className="text-yellow-400">ELSE IF</span> attendance &lt; 75% <span className="text-yellow-400">-&gt; MEDIUM RISK</span></p>
+                <p><span className="text-yellow-400">ELSE IF</span> cgpa &lt; 5 <span className="text-yellow-400">-&gt; MEDIUM RISK</span></p>
+                <p><span className="text-yellow-400">ELSE IF</span> marks &lt; 60% <span className="text-yellow-400">-&gt; MEDIUM RISK</span></p>
+                <p><span className="text-yellow-400">ELSE</span> <span className="text-green-400">-&gt; LOW RISK</span></p>
               </div>
             </div>
           </div>

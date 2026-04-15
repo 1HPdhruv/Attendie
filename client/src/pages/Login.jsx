@@ -128,7 +128,7 @@ const Login = () => {
                 onClick={() => setShowpassword(!showpassword)}
                 className="cursor-pointer ml-2"
               >
-                👁️
+                Show
               </span>
             </div>
 

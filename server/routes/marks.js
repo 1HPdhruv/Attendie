@@ -53,13 +53,11 @@ router.get("/:studentId", async (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    // Calculate summary stats
     const marks = student.marks || [];
     const avgPct = marks.length
       ? +(marks.reduce((s, m) => s + (m.marksObtained / m.maxMarks) * 100, 0) / marks.length).toFixed(2)
       : 0;
 
-    // Semester-wise breakdown
     const semMap = {};
     marks.forEach((m) => {
       const sem = m.semester || 1;
@@ -88,6 +86,37 @@ router.get("/:studentId", async (req, res) => {
   } catch (err) {
     console.error("Get marks error:", err);
     return res.status(500).json({ error: "Failed to get marks" });
+  }
+});
+
+// ── PUT /api/marks/:studentId/cgpa — Update CGPA ─────────────────────────────
+// IMPORTANT: This route MUST be defined BEFORE /:studentId/:markId
+// otherwise Express matches "cgpa" as a markId parameter.
+router.put("/:studentId/cgpa", async (req, res) => {
+  try {
+    const { cgpa } = req.body;
+    if (cgpa === undefined || cgpa < 0 || cgpa > 10) {
+      return res.status(400).json({ error: "CGPA must be between 0 and 10" });
+    }
+
+    const student = await Student.findOneAndUpdate(
+      { id: req.params.studentId },
+      { cgpa },
+      { new: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    return res.json({
+      message: "CGPA updated successfully",
+      studentId: student.id,
+      cgpa: student.cgpa,
+    });
+  } catch (err) {
+    console.error("Update CGPA error:", err);
+    return res.status(500).json({ error: "Failed to update CGPA" });
   }
 });
 
@@ -143,35 +172,6 @@ router.delete("/:studentId/:markId", async (req, res) => {
   } catch (err) {
     console.error("Delete marks error:", err);
     return res.status(500).json({ error: "Failed to delete marks" });
-  }
-});
-
-// ── PUT /api/marks/:studentId/cgpa — Update CGPA ─────────────────────────────
-router.put("/:studentId/cgpa", async (req, res) => {
-  try {
-    const { cgpa } = req.body;
-    if (cgpa === undefined || cgpa < 0 || cgpa > 10) {
-      return res.status(400).json({ error: "CGPA must be between 0 and 10" });
-    }
-
-    const student = await Student.findOneAndUpdate(
-      { id: req.params.studentId },
-      { cgpa },
-      { new: true }
-    );
-
-    if (!student) {
-      return res.status(404).json({ error: "Student not found" });
-    }
-
-    return res.json({
-      message: "CGPA updated successfully",
-      studentId: student.id,
-      cgpa: student.cgpa,
-    });
-  } catch (err) {
-    console.error("Update CGPA error:", err);
-    return res.status(500).json({ error: "Failed to update CGPA" });
   }
 });
 

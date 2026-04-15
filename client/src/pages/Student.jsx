@@ -28,7 +28,7 @@ ChartJS.register(
   Filler
 );
 
-// ─── Prediction Engine (client-side mirror of server logic) ───────────────────
+// ─── Prediction Engine ───────────────────────────────────────────────────────
 function analyzeAttendance(attendance, totalExpectedClasses = 90) {
   const entries = Object.entries(attendance || {});
   const total = entries.length;
@@ -100,9 +100,9 @@ function predictRisk(attendancePct, cgpa, avgMarks) {
 // ─── Risk Badge ──────────────────────────────────────────────────────────────
 function RiskBadge({ risk, large }) {
   const m = {
-    high: { label: "🔴 High Risk", cls: "bg-red-100 text-red-700 border-red-300", emoji: "🔴" },
-    medium: { label: "🟡 Medium Risk", cls: "bg-yellow-100 text-yellow-700 border-yellow-300", emoji: "🟡" },
-    low: { label: "🟢 Low Risk", cls: "bg-green-100 text-green-700 border-green-300", emoji: "🟢" },
+    high: { label: "HIGH RISK", cls: "bg-red-100 text-red-700 border-red-300" },
+    medium: { label: "MEDIUM RISK", cls: "bg-yellow-100 text-yellow-700 border-yellow-300" },
+    low: { label: "LOW RISK", cls: "bg-green-100 text-green-700 border-green-300" },
   };
   const { label, cls } = m[risk] || m.low;
   return (
@@ -115,9 +115,9 @@ function RiskBadge({ risk, large }) {
 // ─── Trend Badge ─────────────────────────────────────────────────────────────
 function TrendBadge({ trend }) {
   const map = {
-    improving: { label: "↑ Improving", cls: "bg-green-100 text-green-700 border-green-300" },
-    declining: { label: "↓ Declining", cls: "bg-red-100 text-red-700 border-red-300" },
-    stable: { label: "→ Stable", cls: "bg-yellow-100 text-yellow-700 border-yellow-300" },
+    improving: { label: "Improving", cls: "bg-green-100 text-green-700 border-green-300" },
+    declining: { label: "Declining", cls: "bg-red-100 text-red-700 border-red-300" },
+    stable: { label: "Stable", cls: "bg-yellow-100 text-yellow-700 border-yellow-300" },
   };
   const { label, cls } = map[trend] || map.stable;
   return <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${cls}`}>{label}</span>;
@@ -177,7 +177,6 @@ export default function Student() {
     navigate("/");
   };
 
-  // ── Build data ─────────────────────────────────────────────────────────────
   const attendance = student?.attandance || student?.attendance || {};
   const attendanceEntries = Object.entries(attendance).sort(
     ([a], [b]) => new Date(a) - new Date(b)
@@ -193,7 +192,7 @@ export default function Student() {
 
   const riskResult = prediction ? predictRisk(prediction.currentPct, cgpa, avgMarks) : null;
 
-  // ── Semester-wise marks breakdown ──────────────────────────────────────────
+  // Semester-wise marks breakdown
   const semMap = {};
   marks.forEach((m) => {
     const sem = m.semester || 1;
@@ -206,8 +205,7 @@ export default function Student() {
     .map(([sem, data]) => ({ semester: +sem, avgPct: +(data.total / data.count).toFixed(1), marks: data.marks }))
     .sort((a, b) => a.semester - b.semester);
 
-  // ── Chart Data ─────────────────────────────────────────────────────────────
-  // Attendance Doughnut
+  // Chart Data
   const attendanceDoughnut = prediction
     ? {
         labels: ["Present", "Absent"],
@@ -220,7 +218,6 @@ export default function Student() {
       }
     : null;
 
-  // Marks Bar Chart (by subject)
   const subjectMap = {};
   marks.forEach((m) => {
     if (!subjectMap[m.subject]) subjectMap[m.subject] = { total: 0, count: 0 };
@@ -241,7 +238,6 @@ export default function Student() {
     }],
   };
 
-  // ── Dark mode classes ──────────────────────────────────────────────────────
   const bg = darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900";
   const card = darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200";
   const sub = darkMode ? "text-gray-400" : "text-gray-500";
@@ -261,7 +257,7 @@ export default function Student() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-6 bg-white rounded-2xl shadow border border-red-200 max-w-sm">
-          <p className="text-red-600 font-semibold">⚠ {error}</p>
+          <p className="text-red-600 font-semibold">{error}</p>
           <button onClick={() => navigate("/")} className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg text-sm">
             Go back to login
           </button>
@@ -271,21 +267,20 @@ export default function Student() {
   }
 
   const tabs = ["overview", "marks", "attendance"];
-  const tabLabels = { overview: "📊 Overview", marks: "📝 Marks", attendance: "📋 Attendance" };
+  const tabLabels = { overview: "Overview", marks: "Marks", attendance: "Attendance" };
 
   return (
     <div className={`min-h-screen ${bg} transition-colors duration-300`}>
-      {/* ── Navbar ─────────────────────────────────────────────────────────── */}
+      {/* Navbar */}
       <nav className={`${card} border-b px-6 py-4 flex items-center justify-between shadow-sm`}>
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🎓</span>
           <span className="font-bold text-lg">Smart Attendance</span>
         </div>
         <div className="flex items-center gap-3">
           <span className={`text-sm ${sub}`}>{student?.name}</span>
           <button onClick={() => setDarkMode(!darkMode)}
-            className={`text-sm px-3 py-1.5 rounded-lg border ${card} hover:opacity-80`} title="Toggle dark mode">
-            {darkMode ? "☀️" : "🌙"}
+            className={`text-sm px-3 py-1.5 rounded-lg border ${card} hover:opacity-80`}>
+            {darkMode ? "Light" : "Dark"}
           </button>
           <button onClick={handleLogout}
             className="text-sm px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
@@ -294,13 +289,12 @@ export default function Student() {
         </div>
       </nav>
 
-      {/* ── Risk Alert Banner ─────────────────────────────────────────────── */}
+      {/* Risk Alert Banner */}
       {riskResult && riskResult.risk === "high" && (
         <div className="bg-red-500 text-white px-6 py-3 flex items-center gap-3">
-          <span className="text-xl">🚨</span>
           <div>
             <p className="font-bold text-sm">
-              ⚠ Warning: You are at High Academic Risk!
+              Warning: You are at High Academic Risk!
             </p>
             <p className="text-xs opacity-90">
               {riskResult.reason}. Please contact your faculty advisor for guidance.
@@ -310,7 +304,6 @@ export default function Student() {
       )}
       {riskResult && riskResult.risk === "medium" && (
         <div className="bg-yellow-500 text-gray-900 px-6 py-3 flex items-center gap-3">
-          <span className="text-xl">⚠️</span>
           <div>
             <p className="font-bold text-sm">Attention: Medium Risk Detected</p>
             <p className="text-xs opacity-80">{riskResult.reason}. Focus on improving your performance.</p>
@@ -318,7 +311,7 @@ export default function Student() {
         </div>
       )}
 
-      {/* ── Main content ───────────────────────────────────────────────────── */}
+      {/* Main content */}
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Student Info + Risk Card */}
         <div className={`${card} border rounded-2xl p-6 shadow-sm mb-6`}>
@@ -331,10 +324,10 @@ export default function Student() {
               <div className="flex flex-wrap gap-2 mt-1">
                 <span className={`text-xs ${sub}`}>ID: {student?.id}</span>
                 {student?.department && (
-                  <span className={`text-xs ${sub}`}>• Dept: {student.department}</span>
+                  <span className={`text-xs ${sub}`}>| Dept: {student.department}</span>
                 )}
                 {student?.email && (
-                  <span className={`text-xs ${sub}`}>• {student.email}</span>
+                  <span className={`text-xs ${sub}`}>| {student.email}</span>
                 )}
               </div>
             </div>
@@ -382,7 +375,7 @@ export default function Student() {
           ))}
         </div>
 
-        {/* ── Tab: Overview ──────────────────────────────────────────────── */}
+        {/* Tab: Overview */}
         {activeTab === "overview" && (
           <div className="space-y-6">
             {/* Risk Analysis Card */}
@@ -393,7 +386,6 @@ export default function Student() {
                 <div className={`${
                   riskResult.risk === "high" ? "bg-red-500" : riskResult.risk === "medium" ? "bg-yellow-500" : "bg-green-500"
                 } text-white px-5 py-3 flex items-center gap-2`}>
-                  <span className="text-xl">🧠</span>
                   <h3 className="font-bold text-base">ML Risk Prediction (Decision Tree)</h3>
                   <span className="ml-auto text-xs bg-white/20 px-2 py-0.5 rounded-full">
                     Confidence: {((riskResult.confidence || 0) * 100).toFixed(0)}%
@@ -427,10 +419,9 @@ export default function Student() {
 
             {/* Charts Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Attendance Doughnut */}
               {attendanceDoughnut && (
                 <div className={`${card} border rounded-2xl p-5 shadow-sm`}>
-                  <h3 className="font-bold text-sm mb-4">📊 Attendance Breakdown</h3>
+                  <h3 className="font-bold text-sm mb-4">Attendance Breakdown</h3>
                   <div className="h-52 flex items-center justify-center">
                     <Doughnut data={attendanceDoughnut} options={{
                       responsive: true,
@@ -442,10 +433,8 @@ export default function Student() {
                   </div>
                 </div>
               )}
-
-              {/* Marks Bar Chart */}
               <div className={`${card} border rounded-2xl p-5 shadow-sm`}>
-                <h3 className="font-bold text-sm mb-4">📝 Subject-wise Marks</h3>
+                <h3 className="font-bold text-sm mb-4">Subject-wise Marks</h3>
                 <div className="h-52">
                   <Bar data={marksBarData} options={{
                     responsive: true,
@@ -472,23 +461,23 @@ export default function Student() {
                   color={prediction.atRisk ? "bg-red-500" : prediction.currentPct >= 75 ? "bg-green-500" : "bg-yellow-500"}
                 />
                 <div className="flex flex-wrap gap-2 text-sm mt-4">
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">✅ Present: {prediction.presentCount}</span>
-                  <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium">❌ Absent: {prediction.absentCount}</span>
-                  <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-medium">📅 Total: {prediction.totalClasses}</span>
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">Present: {prediction.presentCount}</span>
+                  <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium">Absent: {prediction.absentCount}</span>
+                  <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-medium">Total: {prediction.totalClasses}</span>
                   <TrendBadge trend={prediction.trend} />
                 </div>
                 {prediction.atRisk ? (
                   <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 mt-4">
-                    🚨 <strong>You are at risk of falling below 75%!</strong> Maintain full attendance from here onwards.
+                    <strong>You are at risk of falling below 75%!</strong> Maintain full attendance from here onwards.
                   </div>
                 ) : (
                   <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700 mt-4">
-                    ✅ You can afford <strong>{prediction.canAffordAbsences} more absence{prediction.canAffordAbsences !== 1 ? "s" : ""}</strong> and still stay above 75%.
+                    You can afford <strong>{prediction.canAffordAbsences} more absence{prediction.canAffordAbsences !== 1 ? "s" : ""}</strong> and still stay above 75%.
                   </div>
                 )}
                 {prediction.riskDays.length > 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-sm text-yellow-800 mt-3">
-                    ⚠️ <strong>Habitual absence days:</strong> {prediction.riskDays.join(", ")} — You tend to skip these days more than 40% of the time.
+                    <strong>Habitual absence days:</strong> {prediction.riskDays.join(", ")} -- You tend to skip these days more than 40% of the time.
                   </div>
                 )}
               </div>
@@ -496,18 +485,16 @@ export default function Student() {
           </div>
         )}
 
-        {/* ── Tab: Marks ─────────────────────────────────────────────────── */}
+        {/* Tab: Marks */}
         {activeTab === "marks" && (
           <div className="space-y-6">
             {marks.length === 0 ? (
               <div className={`${card} border rounded-2xl p-12 text-center text-gray-400`}>
-                <p className="text-4xl mb-3">📝</p>
                 <p className="font-semibold">No marks recorded yet.</p>
                 <p className="text-sm mt-1">Your faculty will add your marks here.</p>
               </div>
             ) : (
               <>
-                {/* Semester-wise cards */}
                 {semesters.map((sem) => (
                   <div key={sem.semester} className={`${card} border rounded-2xl shadow-sm overflow-hidden`}>
                     <div className="px-5 py-3 border-b flex items-center justify-between">
@@ -554,11 +541,11 @@ export default function Student() {
           </div>
         )}
 
-        {/* ── Tab: Attendance Record ──────────────────────────────────────── */}
+        {/* Tab: Attendance Record */}
         {activeTab === "attendance" && (
           <div className={`${card} border rounded-2xl shadow-sm overflow-hidden`}>
             <div className="px-5 py-4 border-b flex items-center justify-between">
-              <h2 className="font-bold text-base">📋 Attendance Record</h2>
+              <h2 className="font-bold text-base">Attendance Record</h2>
               <span className={`text-sm ${sub}`}>
                 {attendanceEntries.length} class{attendanceEntries.length !== 1 ? "es" : ""}
               </span>
@@ -592,7 +579,7 @@ export default function Student() {
                             <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold ${
                               isPresent ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                             }`}>
-                              {isPresent ? "✅ Present" : "❌ Absent"}
+                              {isPresent ? "Present" : "Absent"}
                             </span>
                           </td>
                         </tr>
