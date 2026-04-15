@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -7,10 +8,12 @@ const LoginRouter = require("./routes/login");
 const StudentRouter = require("./routes/student");
 const TeacherRouter = require("./routes/Teacher");
 const AddStudentRouter = require("./routes/AddStudent");
+const RiskPredictRouter = require("./routes/riskPredict");
+const MarksRouter = require("./routes/marks");
 const cors = require("cors");
 const admin = require("./model/admin");
 const student = require("./model/student");
-require('dotenv').config()
+//require('dotenv').config()
 mongoose
   .connect(process.env.MONGODB)
   .then(() => {
@@ -25,7 +28,9 @@ app.use("/", LoginRouter);
 app.use("/Student", authenticate, StudentRouter);
 app.use("/Teacher", authenticate, authorization, TeacherRouter);
 app.use("/AddStudent", authenticate, AddStudentRouter);
+app.use("/api/risk", authenticate, RiskPredictRouter);
+app.use("/api/marks", authenticate, MarksRouter);
 
-app.listen(process.env.PORT,'0.0.0.0', () => {
+app.listen(process.env.PORT, '0.0.0.0', () => {
   console.log("Lisenting...");
 });

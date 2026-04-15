@@ -1,12 +1,25 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const markSchema = new mongoose.Schema({
+  subject: { type: String, required: true },
+  examType: { type: String, enum: ["internal", "midterm", "final", "assignment", "practical"], default: "internal" },
+  marksObtained: { type: Number, required: true },
+  maxMarks: { type: Number, required: true, default: 100 },
+  semester: { type: Number, default: 1 },
+  date: { type: Date, default: Date.now },
+});
+
 const studentschema = new mongoose.Schema({
   name: String,
   id: String,
   email: String,
   phone_no: String,
   password: String,
+  department: { type: String, default: "" },
+  admission_year: { type: Number, default: new Date().getFullYear() },
+  cgpa: { type: Number, default: 0, min: 0, max: 10 },
+  marks: [markSchema],
   attandance: {
     type: Map,
     of: String,
