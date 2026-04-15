@@ -11,7 +11,7 @@ const Login = () => {
 
   // ✅ Check backend is alive (only once)
   useEffect(() => {
-    fetch(apiUrl("/api/health"))
+    fetch(apiUrl("/"))
       .then((res) => {
         if (res.ok) setLoad(true);
       })
@@ -37,7 +37,7 @@ const Login = () => {
     const id = data.get("userid");
     const password = data.get("password");
 
-    fetch(apiUrl("/api/auth/login"), {
+    fetch(apiUrl("/"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
