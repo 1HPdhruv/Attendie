@@ -1,11 +1,11 @@
-# 🎓 MERN Student Attendance Management System
+#  MERN Student Risk Management System (Attendance and Marks)
 
 [![Deployed on Render](https://img.shields.io/badge/Backend-Render-46a2f1?logo=render)](https://student-attandance-management-system.netlify.app/)
-[![Deploy Frontend on Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://vercel.com/)
+[![Deploy Frontend on Netlify]([https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://vercel.com/](https://logo.svgcdn.com/logos/netlify.png))
 [![Docker](https://img.shields.io/badge/Docker-Hub-2496ed?logo=docker)](https://hub.docker.com/repository/docker/pradeep2005/mern-server/general)
 
 
-## 🧱 Clean Architecture (Client + Server)
+##  Clean Architecture (Client + Server)
 
 This repository is organized for easy deployment:
 
@@ -21,7 +21,7 @@ Backend API is modular and beginner-friendly:
 
 ---
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 ### Backend (`server/.env`)
 
@@ -46,7 +46,7 @@ Only frontend API base URL is required on client side.
 
 ---
 
-## 🧪 Run Locally
+##  Run Locally
 
 ### 1. Start backend
 
@@ -77,7 +77,7 @@ npm run build
 
 ---
 
-## 🚀 Deployment Guide
+##  Deployment Guide
 
 ### Backend on Render
 
@@ -101,7 +101,7 @@ After setting `VITE_API_URL`, frontend API calls will use deployed backend.
 ---
 
 
-## 📌 Overview
+##  Overview
 
 A **Full-Stack Student Attendance Management System** built with the **MERN stack**.  
 It enables teachers to manage students, track attendance, and enforce **role-based access control** with a modern, responsive UI.
@@ -109,26 +109,19 @@ It enables teachers to manage students, track attendance, and enforce **role-bas
 
 
 ---
-## 🧑‍💻 Demo Credentials
+##  Demo Credentials
 
 Use the following credentials to explore the application:
 
-### 👩‍🏫 Teacher Login
+###  Teacher Login
 - **ID:** `t001`  
 - **Password:** `abc@123`
 
-### 🎓 Student Login
+###  Student Login
 - **ID:** `std_1`  
 - **Password:** `linus@123`
 
-⚠️ *These demo accounts are provided only for testing purposes.*
-
----
-## 🎥 Demo Video
-
-Click the thumbnail to see the demo
-
-[![Watch the video](https://img.youtube.com/vi/W6Wn3ig0XTY/0.jpg)](https://youtu.be/W6Wn3ig0XTY)
+ *These demo accounts are provided only for testing purposes.*
 
 ---
 
@@ -141,7 +134,7 @@ Click the thumbnail to see the demo
 - Version controlled with **Git & GitHub** for collaboration and source management 
 
 ---
-## 🚀 Deployment Workflow
+##  Deployment Workflow
 
 This project follows a **professional-grade CI/CD pipeline**:
 
@@ -155,7 +148,7 @@ flowchart LR
     A --> G[Netlify Build & Deploy]
     G --> H[Frontend Live]
 ```
-🔄 **Flow**
+ **Flow**
 
 - Commit pushed → GitHub Actions runs  
 - **Backend**: Docker image built → pushed to Docker Hub → Render auto-deploys via webhook  
@@ -163,14 +156,14 @@ flowchart LR
 
 ---
 
-🔒 **Environment Variables**
+ **Environment Variables**
 
 Both **frontend (Netlify)** and **backend (Render)** use environment variables for sensitive data (MongoDB URI, JWT secrets, API keys).  
 ➡️ No secrets are exposed in the codebase.  
 
 ---
 
-🛠️ **Tech Stack**
+ **Tech Stack**
 
 - **Frontend**: React, Tailwind CSS, React Router DOM  
 - **Backend**: Node.js, Express.js  
@@ -181,21 +174,21 @@ Both **frontend (Netlify)** and **backend (Render)** use environment variables f
 
 ---
 
-✨ **Features**
+ **Features**
 
-👩‍🏫 **Teacher**  
+ **Teacher**  
 - Add / delete students  
 - Mark and update attendance  
 - View student records in a dynamic table  
 
-🎓 **Student**  
+ **Student**  
 - Secure login  
 - View personal attendance records  
 - Track attendance percentage    
 
 ---
 
-# 📘 Project Journey – Student Management System (Commit by Commit)
+#  Project Journey – Student Management System (Commit by Commit)
 
 This project documents my journey of building a **Full-Stack Student Management Application** step by step, commit by commit.  
 The app enables teachers to manage attendance and students to view their records securely.  
@@ -373,7 +366,7 @@ The app enables teachers to manage attendance and students to view their records
 
 ---
 
-🚀 **Final Thoughts**  
+ **Final Thoughts**  
 
 This project evolved from a simple CRUD app into a secure, scalable, production-ready MERN application.  
 
@@ -382,5 +375,5 @@ It demonstrates:
 - Real-world CI/CD with Docker + GitHub Actions + Render + Netlify  
 - Strong focus on security, scalability, and clean UI/UX  
 
-📌 This project showcases both my technical expertise (**MERN stack, DevOps, security**) and my ability to deliver a **professional-grade deployment pipeline**.  
+ This project showcases both my technical expertise (**MERN stack, DevOps, security**) and my ability to deliver a **professional-grade deployment pipeline**.  
 
