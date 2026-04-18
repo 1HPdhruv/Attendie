@@ -1,7 +1,7 @@
 #  MERN Student Risk Management System (Attendance and Marks)
 
-[![Deployed on Render](https://img.shields.io/badge/Backend-Render-46a2f1?logo=render)](https://student-attandance-management-system.netlify.app/)
-[![Deploy Frontend on Netlify]([https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://vercel.com/](https://logo.svgcdn.com/logos/netlify.png))
+[![Deployed on Render](https://img.shields.io/badge/Backend-Render-46a2f1?logo=render)](https://attenddie.netlify.app/)
+[![Deploy Frontend on Netlify](https://img.shields.io/badge/Frontend-Netlify-00C7B7?logo=netlify&logoColor=white)](https://attenddie.netlify.app/)
 [![Docker](https://img.shields.io/badge/Docker-Hub-2496ed?logo=docker)](https://hub.docker.com/repository/docker/pradeep2005/mern-server/general)
 
 
