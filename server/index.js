@@ -15,7 +15,7 @@ const admin = require("./model/admin");
 const student = require("./model/student");
 //require('dotenv').config()
 mongoose
-  .connect(process.env.MONGODB)
+  .connect(process.env.MONGODB || "mongodb+srv://1HPdhruv:Dj_bravo06@cluster.kqnqjwh.mongodb.net/attendie?appName=Cluster")
   .then(() => {
     console.log("connected to monogo");
   })
